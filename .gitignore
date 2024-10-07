@@ -6,6 +6,31 @@ __pycache__/
 # C extensions
 *.so
 
+
+# Node.js
+node_modules/
+npm-debug.log
+yarn-error.log
+package-lock.json
+.pnpm-debug.log
+.pnp
+.pnp.js
+.DS_Store
+.env
+.env.test
+coverage/
+dist/
+# Optional:
+logs
+*.log
+logs/**/*.log
+pids
+*.pid
+*.seed
+*.pid.lock
+lib-cov
+
+
 /megatest
 /tests/__*
 # Distribution / packaging

@@ -11,6 +11,9 @@ discord = "^2.3.2"
 beartype = "^0.19.0"
 toml = "^0.10.2"
 loguru = "^0.7.2"
+flask = "^3.0.3"
+flask-cors = "^5.0.0"
+apscheduler = "^3.10.4"
 
 
 [tool.poetry.group.dev.dependencies]

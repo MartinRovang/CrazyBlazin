@@ -1,0 +1,55 @@
+The Hunger Games have begun! Assigning items and setting health...
+Daniel has been assigned a **Poison Dagger** and has **100 health**.
+Namaleave👋 has been assigned a **Sword** and has **100 health**.
+Hannah Fry lover has been assigned a **Bow** and has **100 health**.
+joakim has been assigned a **Flamethrower** and has **100 health**.
+Let the battle begin!
+Hannah Fry lover is burned by the Flamethrower, taking 5 damage over time!
+Hannah Fry lover is burned by the Flamethrower, taking 5 damage over time!
+Hannah Fry lover is burned by the Flamethrower, taking 5 damage over time!
+joakim attacks Hannah Fry lover with a **Flamethrower**, dealing 16 damage!
+Hannah Fry lover is burned by the Flamethrower, taking 5 damage over time!
+Hannah Fry lover is burned by the Flamethrower, taking 5 damage over time!
+Hannah Fry lover is burned by the Flamethrower, taking 5 damage over time!
+joakim attacks Hannah Fry lover with a **Flamethrower**, dealing 14 damage!
+Hannah Fry lover attacks Daniel with a **Bow**, dealing 11 damage!
+joakim is poisoned by the Poison Dagger, taking 4 poison damage!
+joakim is poisoned by the Poison Dagger, taking 4 poison damage!
+joakim is poisoned by the Poison Dagger, taking 4 poison damage!
+Daniel attacks joakim with a **Poison Dagger**, dealing 12 damage!
+Namaleave👋 attacks joakim with a **Sword**, dealing 23 damage!
+Hannah Fry lover is poisoned by the Poison Dagger, taking 4 poison damage!
+Hannah Fry lover is poisoned by the Poison Dagger, taking 4 poison damage!
+Hannah Fry lover is poisoned by the Poison Dagger, taking 4 poison damage!
+Daniel attacks Hannah Fry lover with a **Poison Dagger**, dealing 10 damage!
+Namaleave👋 is burned by the Flamethrower, taking 5 damage over time!
+Namaleave👋 is burned by the Flamethrower, taking 5 damage over time!
+Namaleave👋 is burned by the Flamethrower, taking 5 damage over time!
+joakim attacks Namaleave👋 with a **Flamethrower**, dealing 17 damage!
+Daniel attempted to attack Hannah Fry lover with a **Poison Dagger**, but it missed!
+Namaleave👋 attacks joakim with a **Sword**, dealing 15 damage!
+Daniel is burned by the Flamethrower, taking 5 damage over time!
+Daniel is burned by the Flamethrower, taking 5 damage over time!
+Daniel is burned by the Flamethrower, taking 5 damage over time!
+joakim attacks Daniel with a **Flamethrower**, dealing 17 damage!
+Namaleave👋 is poisoned by the Poison Dagger, taking 4 poison damage!
+Namaleave👋 is poisoned by the Poison Dagger, taking 4 poison damage!
+Namaleave👋 is poisoned by the Poison Dagger, taking 4 poison damage!
+Daniel attacks Namaleave👋 with a **Poison Dagger**, dealing 12 damage!
+Hannah Fry lover attacks joakim with a **Bow**, dealing 34 damage!
+Hannah Fry lover attacks Daniel with a **Bow**, dealing 14 damage!
+Hannah Fry lover attacks joakim with a **Bow**, dealing 16 damage!
+joakim has been eliminated!
+Hannah Fry lover attacks Daniel with a **Bow**, dealing 16 damage!
+Hannah Fry lover attacks Namaleave👋 with a **Bow**, dealing 40 damage!
+Namaleave👋 is poisoned by the Poison Dagger, taking 4 poison damage!
+Namaleave👋 is poisoned by the Poison Dagger, taking 4 poison damage!
+Namaleave👋 is poisoned by the Poison Dagger, taking 4 poison damage!
+Daniel attacks Namaleave👋 with a **Poison Dagger**, dealing 20 damage!
+Namaleave👋 has been eliminated!
+Hannah Fry lover is poisoned by the Poison Dagger, taking 4 poison damage!
+Hannah Fry lover is poisoned by the Poison Dagger, taking 4 poison damage!
+Hannah Fry lover is poisoned by the Poison Dagger, taking 4 poison damage!
+Daniel attacks Hannah Fry lover with a **Poison Dagger**, dealing 9 damage!
+Hannah Fry lover has been eliminated!
+The winner is **Daniel** with **27 health remaining**!

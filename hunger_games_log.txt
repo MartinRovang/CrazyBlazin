@@ -1,0 +1,65 @@
+The Hunger Games have begun! Assigning items and setting health...
+Daniel has been assigned a **Sword** and has **100 health**.
+Hannah Fry lover has been assigned a **Dagger** and has **100 health**.
+joakim has been assigned a **Magic Staff** and has **100 health**.
+Let the battle begin!
+Hannah Fry lover attacks joakim with their **Dagger**, dealing **10 damage**! (hit)
+joakim's attack missed!
+Daniel's attack missed!
+joakim attacks Hannah Fry lover with their **Magic Staff**, dealing **13 damage**! (hit)
+joakim attacks Hannah Fry lover with their **Magic Staff**, dealing **32 damage**! (critical hit)
+Hannah Fry lover attacks joakim with their **Dagger**, dealing **24 damage**! (critical hit)
+joakim attacks Hannah Fry lover with their **Magic Staff**, dealing **19 damage**! (hit)
+Daniel attacks joakim with their **Sword**, dealing **24 damage**! (hit)
+joakim attacks Daniel with their **Magic Staff**, dealing **12 damage**! (hit)
+joakim attacks Daniel with their **Magic Staff**, dealing **28 damage**! (critical hit)
+Hannah Fry lover attacks Daniel with their **Dagger**, dealing **14 damage**! (critical hit)
+Daniel attacks joakim with their **Sword**, dealing **24 damage**! (hit)
+joakim attacks Daniel with their **Magic Staff**, dealing **38 damage**! (critical hit)
+joakim attacks Hannah Fry lover with their **Magic Staff**, dealing **22 damage**! (hit)
+joakim's attack missed!
+Hannah Fry lover has been eliminated!
+joakim attacks Hannah Fry lover with their **Magic Staff**, dealing **34 damage**! (critical hit)
+joakim has been eliminated!
+Daniel attacks joakim with their **Sword**, dealing **20 damage**! (hit)
+The winner is **Daniel** with **8 health remaining**!
+The Hunger Games have begun! Assigning items and setting health...
+Daniel has been assigned a **Sword** and has **100 health**.
+Hannah Fry lover has been assigned a **Magic Staff** and has **100 health**.
+joakim has been assigned a **Magic Staff** and has **100 health**.
+Let the battle begin!
+joakim's attack missed!
+Hannah Fry lover attacks Daniel with their **Magic Staff**, dealing **26 damage**! (critical hit)
+Daniel attacks Hannah Fry lover with their **Sword**, dealing **21 damage**! (hit)
+Hannah Fry lover attacks joakim with their **Magic Staff**, dealing **15 damage**! (hit)
+Hannah Fry lover attacks joakim with their **Magic Staff**, dealing **28 damage**! (critical hit)
+joakim attacks Hannah Fry lover with their **Magic Staff**, dealing **22 damage**! (hit)
+joakim attacks Hannah Fry lover with their **Magic Staff**, dealing **18 damage**! (hit)
+Hannah Fry lover's attack missed!
+joakim attacks Daniel with their **Magic Staff**, dealing **19 damage**! (hit)
+Daniel attacks Hannah Fry lover with their **Sword**, dealing **15 damage**! (hit)
+Daniel attacks Hannah Fry lover with their **Sword**, dealing **18 damage**! (hit)
+Daniel attacks joakim with their **Sword**, dealing **17 damage**! (hit)
+joakim attacks Daniel with their **Magic Staff**, dealing **44 damage**! (critical hit)
+Daniel has been eliminated!
+Hannah Fry lover attacks Daniel with their **Magic Staff**, dealing **19 damage**! (hit)
+Hannah Fry lover has been eliminated!
+joakim attacks Hannah Fry lover with their **Magic Staff**, dealing **13 damage**! (hit)
+The winner is **joakim** with **40 health remaining**!
+The Hunger Games have begun! Assigning items and setting health...
+Daniel has been assigned a **Flamethrower** and has **20 health**.
+Hannah Fry lover has been assigned a **Poison Dagger** and has **20 health**.
+joakim has been assigned a **Mithril Armor** and has **30 health**.
+Let the battle begin!
+joakim's armor deals 1 thorn damage to Daniel!
+joakim is burned by the Flamethrower, taking 5 damage over time!
+joakim is burned by the Flamethrower, taking 5 damage over time!
+joakim is burned by the Flamethrower, taking 5 damage over time!
+joakim has been eliminated!
+Daniel attacks joakim with their **Flamethrower**, dealing **17.1 damage**! (critical hit)
+Daniel is poisoned by Hannah Fry lover's Poison Dagger, taking 4 damage over time!
+Daniel is poisoned by Hannah Fry lover's Poison Dagger, taking 4 damage over time!
+Daniel is poisoned by Hannah Fry lover's Poison Dagger, taking 4 damage over time!
+Daniel has been eliminated!
+Hannah Fry lover attacks Daniel with their **Poison Dagger**, dealing **11 damage**! (hit)
+The winner is **Hannah Fry lover** with **20 health remaining**!

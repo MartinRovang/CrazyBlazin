@@ -12,6 +12,32 @@ class DataBaseHandler:
     db_name: str = config.DB_NAME
 
     @beartype
+    def update_health(self, user_id: int, health: int) -> None:
+        """Update the health of a specific user."""
+        conn, c = self._get_connection()
+        c.execute(queries.UPDATE_HEALTH, (health, user_id))
+        conn.commit()
+        conn.close()
+
+    # Add new method to DataBaseHandler
+    @beartype
+    def assign_weapon(self, user_id: int, weapon: str) -> None:
+        """Assign a random weapon to the user."""
+        conn, c = self._get_connection()
+        c.execute(queries.ASSIGN_WEAPON, (weapon, user_id))
+        conn.commit()
+        conn.close()
+
+    @beartype
+    def get_user_weapon(self, user_id: int) -> Union[None, Tuple[str, int]]:
+        """Retrieve the weapon and health of a user."""
+        conn, c = self._get_connection()
+        c.execute(queries.GET_WEAPON, (user_id,))
+        result = c.fetchone()
+        conn.close()
+        return result
+
+    @beartype
     def _get_connection(self) -> Tuple[sqlite3.Connection, sqlite3.Cursor]:
         """Establish and return a database connection and cursor."""
         conn = sqlite3.connect(self.db_name, check_same_thread=False)  # Thread-safe connection

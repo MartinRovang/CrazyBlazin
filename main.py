@@ -7,6 +7,7 @@ from beartype import beartype
 from loguru import logger
 import toml
 import threading
+import os
 
 from utils.github_con import approve_pull_request
 from utils.dbhandler import DataBaseHandler
@@ -270,6 +271,275 @@ async def process_pr_queue():
 #     message = await ctx.send(f'A new PR has been created: {pr_url}')
 #     tracked_messages[message.id] = 0
 #     await message.add_reaction('👍')
+
+
+
+# Example list of items (weapons and armors)
+ITEMS = {
+    'Sword': {
+        'type': 'weapon',
+        'damage_range': (15, 25),
+        'accuracy': 0.9,
+        'crit_chance': 0.2,
+        'armor_penetration': 5,
+    },
+    'Axe': {
+        'type': 'weapon',
+        'damage_range': (20, 30),
+        'accuracy': 0.75,
+        'crit_chance': 0.15,
+        'armor_penetration': 3,
+    },
+    'Bow': {
+        'type': 'weapon',
+        'damage_range': (10, 20),
+        'accuracy': 0.8,
+        'crit_chance': 0.25,
+        'armor_penetration': 2,
+    },
+    'Dagger': {
+        'type': 'weapon',
+        'damage_range': (5, 15),
+        'accuracy': 0.95,
+        'crit_chance': 0.35,
+        'armor_penetration': 1,
+    },
+    'Spear': {
+        'type': 'weapon',
+        'damage_range': (18, 28),
+        'accuracy': 0.85,
+        'crit_chance': 0.1,
+        'armor_penetration': 4,
+    },
+    'Magic Staff': {
+        'type': 'weapon',
+        'damage_range': (12, 22),
+        'accuracy': 0.85,
+        'crit_chance': 0.25,
+        'armor_penetration': 999,  # Ignores armor completely
+    },
+    'Flamethrower': {
+        'type': 'weapon',
+        'damage_range': (8, 18),
+        'accuracy': 0.8,
+        'crit_chance': 0.2,
+        'armor_penetration': 0,
+        'damage_over_time': 5,  # Damage per turn
+        'dot_duration': 3,  # Lasts for 3 turns
+    },
+    'Poison Dagger': {
+        'type': 'weapon',
+        'damage_range': (5, 15),
+        'accuracy': 0.9,
+        'crit_chance': 0.3,
+        'armor_penetration': 1,
+        'poison_damage': 4,  # Damage dealt per turn
+        'poison_duration': 3,  # Lasts for 3 turns
+    },
+    'Leather Armor': {
+        'type': 'armor',
+        'evade': 0.1,
+        'health': 10,
+        'flat_damage_reduction': 5,
+        'percent_damage_reduction': 0.1,
+        'thorn_damage': 3,
+    },
+    'Plate Armor': {
+        'type': 'armor',
+        'evade': 0.05,
+        'health': 20,
+        'flat_damage_reduction': 10,
+        'percent_damage_reduction': 0.2,
+        'thorn_damage': 5,
+    },
+    'Shield of Reflection': {
+        'type': 'armor',
+        'evade': 0.05,
+        'health': 15,
+        'flat_damage_reduction': 8,
+        'percent_damage_reduction': 0.15,
+        'thorn_damage': 0,  # No thorn damage, reflects damage instead
+        'reflect_percentage': 0.2,  # Reflects 20% of damage back
+    },
+    'Cloak of Invisibility': {
+        'type': 'armor',
+        'evade': 0.25,  # 25% chance to evade attacks
+        'health': 5,
+        'flat_damage_reduction': 2,
+        'percent_damage_reduction': 0.05,
+        'thorn_damage': 0,  # No thorn damage
+    },
+    'Mithril Armor': {
+        'type': 'armor',
+        'evade': 0.1,
+        'health': 10,
+        'flat_damage_reduction': 15,
+        'percent_damage_reduction': 0.1,
+        'thorn_damage': 1,
+    },
+}
+
+
+FULL_HEALTH = 100  # Default full health for each player
+KNUCKLE_FIST_DAMAGE = 5  # Default damage for knuckle fist
+
+def calculate_damage(item):
+    """Calculate the damage for a weapon, considering critical hits, accuracy, and armor penetration."""
+    if item['type'] == 'weapon':
+        # Check if the attack hits based on accuracy
+        if random.random() > item['accuracy']:
+            return 0, "missed"  # Attack missed
+
+        # Calculate base damage
+        damage = random.randint(*item['damage_range']) if 'damage_range' in item else KNUCKLE_FIST_DAMAGE
+
+        # Check for critical hit
+        if random.random() < item['crit_chance']:
+            damage *= 2  # Double damage on crit
+            return damage, "critical hit"
+
+        return damage, "hit"  # Regular hit
+    else:
+        damage = KNUCKLE_FIST_DAMAGE
+        return damage, "hit"  # Regular hit
+
+async def start_hunger_games(ctx, database_handler, voice_channel_members):
+    """Start the Hunger Games by assigning items and logging the battle in a text file."""
+    
+    log = []  # List to accumulate log entries
+    embed_messages = []  # List to hold embed messages
+
+    # Step 1: Assign random items and set initial health
+    log.append("The Hunger Games have begun! Assigning items and setting health...\n")
+    
+    # Temporary storage for player states
+    players = {}
+    
+    for member in voice_channel_members:
+        item = random.choice(list(ITEMS.keys()))
+        players[member.id] = {
+            'name': member.display_name,
+            'item': item,
+            'health': FULL_HEALTH + ITEMS[item].get('health', 0),  # Reset health to full + armor health
+        }
+        log.append(f"{member.display_name} has been assigned a **{item}** and has **{FULL_HEALTH + ITEMS[item].get('health', 0)} health**.\n")
+        
+        # Create embed for the item
+        embed = discord.Embed(title=f"Item Assigned: {item}", color=discord.Color.blue())
+        item_data = ITEMS[item]
+
+        embed.add_field(name="Type", value=item_data['type'].capitalize(), inline=False)
+        
+        if item_data['type'] == 'weapon':
+            embed.add_field(name="Damage Range", value=f"{item_data['damage_range'][0]} - {item_data['damage_range'][1]}", inline=True)
+            embed.add_field(name="Accuracy", value=f"{item_data['accuracy'] * 100}%", inline=True)
+            embed.add_field(name="Critical Chance", value=f"{item_data['crit_chance'] * 100}%", inline=True)
+            embed.add_field(name="Armor Penetration", value=item_data['armor_penetration'], inline=True)
+            embed.set_footer(text="⚔️ Weapon Stats")
+        elif item_data['type'] == 'armor':
+            embed.add_field(name="Evade Chance", value=f"{item_data['evade'] * 100}%", inline=True)
+            embed.add_field(name="Health Bonus", value=item_data.get('health', 0), inline=True)
+            embed.add_field(name="Flat Damage Reduction", value=item_data.get('flat_damage_reduction', 0), inline=True)
+            embed.add_field(name="Percent Damage Reduction", value=f"{item_data.get('percent_damage_reduction', 0) * 100}%", inline=True)
+            embed.set_footer(text="🛡️ Armor Stats")
+        
+        # Add the embed to the list
+        embed_messages.append(embed)
+
+    # Step 2: Send embed messages for assigned items
+    for embed in embed_messages:
+        await ctx.send(embed=embed)
+
+    # Simulate battle
+    alive_players = voice_channel_members[:]
+    log.append("Let the battle begin!\n")
+
+    while len(alive_players) > 1:
+        # Pick attacker and defender
+        attacker = random.choice(alive_players)
+        defender = random.choice([p for p in alive_players if p != attacker])
+
+        # Retrieve attacker and defender's item and health
+        attacker_item = players[attacker.id]['item']
+        defender_item = players[defender.id]['item']
+        attacker_health = players[attacker.id]['health']
+        defender_health = players[defender.id]['health']
+
+        # Calculate the damage based on the attacker's item properties
+        attack_damage, attack_type = calculate_damage(ITEMS[attacker_item])
+
+        # Apply armor penetration
+        armor_penetration = ITEMS[attacker_item].get('armor_penetration', 0)
+        flat_reduction = ITEMS[defender_item].get('flat_damage_reduction', 0)
+        percent_reduction = ITEMS[defender_item].get('percent_damage_reduction', 0)
+
+        # Calculate effective damage reduction
+        effective_reduction = max(0, flat_reduction - armor_penetration)
+        damage_after_reduction = max(0, attack_damage - effective_reduction)
+        damage_after_reduction *= (1 - percent_reduction)  # Apply percentage reduction
+
+        # Update defender's health if attack wasn't missed
+        thorn_damage = ITEMS[defender_item].get('thorn_damage', 0)  # Thorn damage for the defender
+        if attack_damage > 0:
+            new_health = defender_health - damage_after_reduction
+            players[defender.id]['health'] = new_health
+            
+            # Apply thorn damage to attacker if the defender has armor
+            if thorn_damage > 0:
+                players[attacker.id]['health'] -= thorn_damage  # Apply thorn damage to attacker
+                log.append(f"{players[defender.id]['name']}'s armor deals {thorn_damage} thorn damage to {players[attacker.id]['name']}!\n")
+
+            # Handle special item effects
+            if attacker_item == 'Flamethrower':
+                # Apply damage over time for Flamethrower
+                for _ in range(ITEMS[attacker_item]['dot_duration']):
+                    players[defender.id]['health'] -= ITEMS[attacker_item]['damage_over_time']
+                    log.append(f"{players[defender.id]['name']} is burned by the Flamethrower, taking {ITEMS[attacker_item]['damage_over_time']} damage over time!\n")
+
+            if attacker_item == 'Poison Dagger':
+                # Apply poison damage over turns
+                for _ in range(ITEMS[attacker_item]['poison_duration']):
+                    players[defender.id]['health'] -= ITEMS[attacker_item]['poison_damage']
+                    log.append(f"{players[defender.id]['name']} is poisoned by the Poison Dagger, taking {ITEMS[attacker_item]['poison_damage']} poison damage!\n")
+
+            log.append(f"{players[attacker.id]['name']} attacks {players[defender.id]['name']} with a **{attacker_item}**, dealing {damage_after_reduction} damage!\n")
+        else:
+            log.append(f"{players[attacker.id]['name']} attempted to attack {players[defender.id]['name']} with a **{attacker_item}**, but it {attack_type}!\n")
+
+        # Check if defender is still alive
+        if players[defender.id]['health'] <= 0:
+            alive_players.remove(defender)
+            log.append(f"{players[defender.id]['name']} has been eliminated!\n")
+
+    # Determine the winner
+    winner = alive_players[0]
+    log.append(f"The winner is **{players[winner.id]['name']}** with **{players[winner.id]['health']} health remaining**!\n")
+
+    # Write the log to a text file
+    file_path = f"{ctx.guild.id}_hunger_games_log.txt"
+    with open(file_path, 'w', encoding='utf-8') as f:
+        f.writelines(log)
+
+    # Send the log file in the Discord channel
+    await ctx.send(file=discord.File(file_path))
+    await ctx.send(f"The Hunger Games have ended!, winner is **{players[winner.id]['name']}** with **{players[winner.id]['health']} health remaining**!\n")
+
+@bot.command(name="hunger_game")
+async def hunger_game(ctx):
+    """Start the Hunger Game in the current voice channel."""
+    voice_channel = ctx.author.voice.channel  # Get the user's voice channel
+    if not voice_channel:
+        await ctx.send("You're not in a voice channel!")
+        return
+
+    members = voice_channel.members
+    if len(members) < 2:
+        await ctx.send("Not enough players in the voice channel to start the game!")
+        return
+
+    db_handler = DataBaseHandler()
+    await start_hunger_games(ctx, db_handler, members)
+
 
 
 def run_flask():

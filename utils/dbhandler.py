@@ -1,5 +1,6 @@
 import sqlite3
 from dataclasses import dataclass
+
 from beartype import beartype
 from beartype.typing import Tuple, Union
 

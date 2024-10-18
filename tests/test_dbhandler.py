@@ -1,13 +1,14 @@
-import sqlite3
-import pytest
-from dataclasses import dataclass
 import os
+import sqlite3
 import sys
+from dataclasses import dataclass
+
+import pytest
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir)))
 
 from config import config
-from utils import queries, dbhandler
+from utils import dbhandler, queries
 
 # Mock configuration and queries for testing
 config.DB_NAME = ":memory:"  # Use in-memory database for testing

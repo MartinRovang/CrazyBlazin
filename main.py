@@ -6,24 +6,68 @@ from discord.ext import commands
 from beartype import beartype
 from loguru import logger
 import toml
+import threading
 
+from utils.github_con import approve_pull_request
 from utils.dbhandler import DataBaseHandler
 from config import config
+from dataclasses import dataclass
 
 intents = discord.Intents.default()
 intents.voice_states = True  # Track voice states
 intents.message_content = True  # To access message content if needed
 intents.guilds = True  # To get guild info and members
 
-bot = commands.Bot(command_prefix='!', intents=intents)
+@dataclass
+class TrackedMessage:
+    url: str
+    count: int = 0
+
+class MyBot(commands.Bot):
+    async def setup_hook(self):
+        # Create a task to process the PR queue
+        self.loop.create_task(process_pr_queue())
+
+bot = MyBot(command_prefix='!', intents=intents)
 db_handler = DataBaseHandler()
 
 # Variable to track whether the multiplier is active
 multiplier_active = False
 multiplier_active_special = False
 
+# tracked messages for PR approvals
+tracked_messages = {}
+
 # Track the last time someone was awarded for being the first to join any voice channel
 last_awarded_time = None
+
+from flask import Flask, request
+import json
+
+app = Flask(__name__)
+pr_queue = asyncio.Queue()
+
+@app.route('/webhook', methods=['POST'])
+async def webhook():
+    logger.info("Webhook received!")
+    try:
+        data = json.loads(request.data)
+        if data['action'] == 'opened':
+            pr_url = data['pull_request']['html_url']
+            #channel = bot.get_channel(config.CHAT_CHANNEL_ID)  # Replace with your Discord channel ID
+            asyncio.run_coroutine_threadsafe(pr_queue.put(pr_url), bot.loop)
+
+            # try:
+            #     # Use asyncio.wait_for to set a timeout for the task
+            #     await asyncio.wait_for(post_pr_message(channel, pr_url), timeout=10)  # Set timeout in seconds
+            # except asyncio.TimeoutError:
+            #     logger.error("Timeout occurred while posting PR message")
+            #     return 'Timeout', 504  # HTTP 504 Gateway Timeout
+        
+        return pr_url, 200
+    except Exception as e:
+        logger.exception(e)
+        return '', 500
 
 # Function to add coins to a user
 @beartype
@@ -188,5 +232,56 @@ async def leaderboard(ctx):
     await ctx.send(embed=embed)
 
 
+# Parse the pull request URL (to extract repo name and PR number)
+def parse_pr_url(pr_url):
+    parts = pr_url.split('/')
+    repo_name = f"{parts[3]}/{parts[4]}"
+    pr_number = int(parts[-1])
+    return repo_name, pr_number
+
+
+@bot.event
+async def on_reaction_add(reaction, user):
+    message = reaction.message
+    if user == bot.user:
+        return  # Skip bot's own reactions
+
+    # Check if the message is tracked for a pull request
+    if message.id in tracked_messages:
+        tracked_message = tracked_messages[message.id]
+        if reaction.emoji == '👍':  # Check if the reaction is the specific emoji
+            tracked_message.count += 1
+            if tracked_message.count >= config.REACTION_THRESHOLD:
+                repo_name, pr_number = parse_pr_url(tracked_message.url)
+                approve_pull_request(repo_name, pr_number)
+                await message.channel.send(f"PR {tracked_message.url} has been approved with {config.REACTION_THRESHOLD} 👍 reactions!")
+    
+async def process_pr_queue():
+    await bot.wait_until_ready()
+    while not bot.is_closed():
+        pr_url = await pr_queue.get()
+        channel = bot.get_channel(config.CHAT_CHANNEL_ID)  # Replace with your Discord channel ID
+        message = await channel.send(f'A new PR has been created: {pr_url}')
+        tracked_messages[message.id] = TrackedMessage(url = pr_url)
+        await message.add_reaction('👍')
+        pr_queue.task_done()
+# @bot.command()
+# async def post_pr_message(ctx, pr_url):
+#     message = await ctx.send(f'A new PR has been created: {pr_url}')
+#     tracked_messages[message.id] = 0
+#     await message.add_reaction('👍')
+
+
+def run_flask():
+    app.run(port=config.WEBHOOK_PORT)
+
+
 if __name__ == "__main__":
-    bot.run(config.TOKEN)
+    # Start the Flask server in a separate thread
+    try:
+        flask_thread = threading.Thread(target=run_flask)
+        flask_thread.start()
+        bot.run(config.TOKEN)
+    except KeyboardInterrupt:
+        flask_thread.join()
+        logger.info("Bot stopped.")

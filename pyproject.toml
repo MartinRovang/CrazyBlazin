@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "discordbb"
-version = "1.2.1"
+version = "1.2.6beta"
 description = ""
 authors = ["Martin Røvang <martinrovang@gmail.com>"]
 readme = "README.md"
@@ -11,6 +11,9 @@ discord = "^2.3.2"
 beartype = "^0.19.0"
 toml = "^0.10.2"
 loguru = "^0.7.2"
+pygithub = "^2.4.0"
+flask = {extras = ["async"], version = "^3.0.3"}
+uvicorn = "^0.32.0"
 
 
 [tool.poetry.group.dev.dependencies]
